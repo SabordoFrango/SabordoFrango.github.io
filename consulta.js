@@ -1,0 +1,123 @@
+function formatarData(dataInput, tipo){
+	const data = new Date(dataInput);
+	const dia = String(data.getUTCDate()).padStart(2, '0');
+	const mes = String(data.getUTCMonth() + 1).padStart(2, '0');
+	const ano = data.getUTCFullYear();
+	switch(tipo){
+		case 0:
+			return `${dia}/${mes}/${ano}`;
+		case 1:
+			return `${ano}-${mes}-${dia}`;
+	}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const tableBody = document.getElementById('pedidos-table-body');
+    const modal = document.getElementById('edit-modal');
+    const editForm = document.getElementById('edit-form');
+    const closeModalBtn = document.querySelector('.close-btn');
+
+	const inputTelefone = document.getElementById('edit-telefone');
+	const mascaraTelefone = {
+		mask: '(00) 00000-0000'
+	};
+	const mask = IMask(inputTelefone, mascaraTelefone)
+    
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbzk9EsIAZVpIiG-RYklSYjyjvJKrXPAiArnRngZ6qgr5QAvNOU1fX42NAEUjXNM3huz/exec';
+
+    async function carregarPedidos() {
+        try {
+            const response = await fetch(apiUrl);
+            const result = await response.json();
+
+            if (result.status === "sucesso") {
+                tableBody.innerHTML = ''; 
+                result.dados.forEach(pedido => {
+                    const tr = document.createElement('tr');
+
+					dataRetiradaFormatada = formatarData(pedido.retirada, 0);
+
+					//Formatar pedidos
+					const produto = pedido.produto;
+					const produtoList = produto.split(';');
+					const produtoFormatado = `Frango:${produtoList[0]} | Maionese:${produtoList[1]} | Sobrecoxa:${produtoList[2]}`
+
+                    tr.innerHTML = `
+                        <td>${pedido.nome}</td>
+                        <td>${produtoFormatado}</td>
+                        <td>${pedido.telefone}</td>
+                        <td>${dataRetiradaFormatada}</td>
+                        <td>
+                            <button class="edit-btn" data-id="${pedido.id}">Alterar</button>
+                            <button class="delete-btn" data-id="${pedido.id}">Deletar</button>
+                        </td>
+                    `;
+                    tr.dataset.pedido = JSON.stringify(pedido);
+                    tableBody.appendChild(tr);
+                });
+            } else {
+                tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Erro ao carregar pedidos: ${result.detalhe}</td></tr>`;
+            }
+        } catch (error) {
+            console.error('Erro de rede:', error);
+            tableBody.innerHTML = `<tr><td colspan="7" style="text-align:center;">Erro de conexão. Verifique a URL da API e sua internet.</td></tr>`;
+        }
+    }
+
+    tableBody.addEventListener('click', (e) => {
+        const pedidoId = e.target.dataset.id;
+        
+        if (e.target.classList.contains('delete-btn')) {
+            if (confirm(`Tem certeza que deseja deletar o pedido de ID ${pedidoId}?`)) {
+                enviarAcaoParaAPI({ action: 'delete', id: pedidoId });
+            }
+        }
+        
+        if (e.target.classList.contains('edit-btn')) {
+            const pedido = JSON.parse(e.target.closest('tr').dataset.pedido);
+
+            document.getElementById('edit-pedido-id').value = pedido.id;
+            document.getElementById('edit-nome').value = pedido.nome;
+            document.getElementById('edit-produto').value = pedido.produto;
+            document.getElementById('edit-telefone').value = pedido.telefone;
+            document.getElementById('edit-retirada').value = formatarData(pedido.retirada, 1);
+            modal.style.display = 'flex';
+        }
+    });
+
+    closeModalBtn.addEventListener('click', () => { modal.style.display = 'none'; });
+    window.addEventListener('click', (e) => {
+        if (e.target == modal) { modal.style.display = 'none'; }
+    });
+
+    editForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const id = document.getElementById('edit-pedido-id').value;
+        const dadosDoFormulario = {
+            nome: document.getElementById('edit-nome').value,
+            produto: document.getElementById('edit-produto').value,
+            telefone: document.getElementById('edit-telefone').value,
+            retirada: document.getElementById('edit-retirada').value,
+        };
+		console.log(dadosDoFormulario);
+        enviarAcaoParaAPI({ action: 'update', id: id, data: dadosDoFormulario });
+        modal.style.display = 'none';
+    });
+
+    async function enviarAcaoParaAPI(payload) {
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: JSON.stringify(payload)
+            });
+            alert('Ação enviada com sucesso! Atualizando a lista...');
+            carregarPedidos();
+        } catch (error) {
+            console.error('Erro ao enviar ação:', error);
+            alert('Falha ao enviar ação para o servidor.');
+        }
+    }
+
+    carregarPedidos();
+});
