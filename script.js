@@ -12,7 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const submitButton = document.getElementById('submit-button');
     const statusMessage = document.getElementById('status-message');
 
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbzk9EsIAZVpIiG-RYklSYjyjvJKrXPAiArnRngZ6qgr5QAvNOU1fX42NAEUjXNM3huz/exec';
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbym0GgNgHq5HvQCoZJMY5jgS-AWs14tJj2VAnvDegK3EHTekPhqPU9cnLsRz4W9zMnn/exec';
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();

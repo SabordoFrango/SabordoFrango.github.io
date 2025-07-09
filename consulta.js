@@ -23,7 +23,7 @@ document.addEventListener('DOMContentLoaded', () => {
 	};
 	const mask = IMask(inputTelefone, mascaraTelefone)
     
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbzk9EsIAZVpIiG-RYklSYjyjvJKrXPAiArnRngZ6qgr5QAvNOU1fX42NAEUjXNM3huz/exec';
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbym0GgNgHq5HvQCoZJMY5jgS-AWs14tJj2VAnvDegK3EHTekPhqPU9cnLsRz4W9zMnn/exec';
 
     async function carregarPedidos() {
         try {
@@ -99,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
             telefone: document.getElementById('edit-telefone').value,
             retirada: document.getElementById('edit-retirada').value,
         };
-		console.log(dadosDoFormulario);
         enviarAcaoParaAPI({ action: 'update', id: id, data: dadosDoFormulario });
         modal.style.display = 'none';
     });
@@ -109,9 +108,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch(apiUrl, {
                 method: 'POST',
                 mode: 'no-cors',
+				headers: {
+					'Content-Type': 'application/json',
+				},
                 body: JSON.stringify(payload)
             });
             alert('Ação enviada com sucesso! Atualizando a lista...');
+			setTimeout(() => {
+				carregarPedidos();
+			}, 2000);
             carregarPedidos();
         } catch (error) {
             console.error('Erro ao enviar ação:', error);
