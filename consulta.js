@@ -1,3 +1,5 @@
+import { getCookie } from "./getCookie.js";
+
 function formatarData(dataInput, tipo){
 	const data = new Date(dataInput);
 	const dia = String(data.getUTCDate()).padStart(2, '0');
@@ -35,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 result.dados.forEach(pedido => {
                     const tr = document.createElement('tr');
 
-					dataRetiradaFormatada = formatarData(pedido.retirada, 0);
+					const dataRetiradaFormatada = formatarData(pedido.retirada, 0);
 
 					//Formatar pedidos
 					const produto = pedido.produto;
@@ -69,16 +71,24 @@ document.addEventListener('DOMContentLoaded', () => {
         
         if (e.target.classList.contains('delete-btn')) {
             if (confirm(`Tem certeza que deseja deletar o pedido de ID ${pedidoId}?`)) {
-                enviarAcaoParaAPI({ action: 'delete', id: pedidoId });
+                enviarAcaoParaAPI({ action: 'delete', id: pedidoId, password: getCookie('password') });
             }
         }
         
         if (e.target.classList.contains('edit-btn')) {
             const pedido = JSON.parse(e.target.closest('tr').dataset.pedido);
 
+			const produtos = pedido.produto;
+			const produtosList = produtos.split(';');
+			const frango = produtosList[0];
+			const maionese = produtosList[1];
+			const sobrecoxa = produtosList[2];
+
             document.getElementById('edit-pedido-id').value = pedido.id;
             document.getElementById('edit-nome').value = pedido.nome;
-            document.getElementById('edit-produto').value = pedido.produto;
+			document.getElementById('edit-frango').value = frango;
+			document.getElementById('edit-maionese').value = maionese;
+			document.getElementById('edit-sobrecoxa').value = sobrecoxa;
             document.getElementById('edit-telefone').value = pedido.telefone;
             document.getElementById('edit-retirada').value = formatarData(pedido.retirada, 1);
             modal.style.display = 'flex';
@@ -93,13 +103,22 @@ document.addEventListener('DOMContentLoaded', () => {
     editForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const id = document.getElementById('edit-pedido-id').value;
+
+		const frangoEditado = document.getElementById('edit-frango').value;
+		const maioneseEditado = document.getElementById('edit-maionese').value;
+		const sobrecoxaEditado = document.getElementById('edit-sobrecoxa').value;
+
+		const produtosListEditado = new Array(frangoEditado, maioneseEditado, sobrecoxaEditado);
+
+		const produtosEditado = produtosListEditado.join(';');
+
         const dadosDoFormulario = {
             nome: document.getElementById('edit-nome').value,
-            produto: document.getElementById('edit-produto').value,
+            produto: produtosEditado,
             telefone: document.getElementById('edit-telefone').value,
             retirada: document.getElementById('edit-retirada').value,
         };
-        enviarAcaoParaAPI({ action: 'update', id: id, data: dadosDoFormulario });
+        enviarAcaoParaAPI({ action: 'update', id: id, data: dadosDoFormulario, password: getCookie('password')});
         modal.style.display = 'none';
     });
 

@@ -1,3 +1,5 @@
+import { getCookie } from "./getCookie.js";
+
 document.addEventListener('DOMContentLoaded', () => {
 
 	const dataHoje = document.getElementById('retirada').valueAsDate = new Date();
@@ -38,7 +40,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const payload = {
             action: 'create',
-            data: dataObject
+            data: dataObject,
+			password: getCookie('password'),
         };
 
 	console.log(JSON.stringify(payload));
@@ -52,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
             statusMessage.textContent = 'Pedido enviado com sucesso!';
             statusMessage.style.color = 'green';
             form.reset();
+			document.getElementById('retirada').valueAsDate = new Date();
         } catch (error) {
             console.error('Erro ao enviar o formulário:', error);
             statusMessage.textContent = 'Ocorreu um erro. Verifique sua conexão e tente novamente.';
