@@ -9,16 +9,18 @@
 
 .password-form{
 	background-color: white;
-	height: 23%;
-	width: 20%;
+	width: 30vw;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
+	justify-content: center;
 	border-radius: 5px;
+	padding: 3%;
 }
 
 .password-form label{
-	margin-top: 3%;
+	margin: 0;
+	padding: 0;
 }
 
 .password-form input{
