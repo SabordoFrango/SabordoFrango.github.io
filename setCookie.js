@@ -1,28 +1,61 @@
 import { getCookie } from "./getCookie.js";
 
+async function verifyPassword(password) {
+	//Gambiarra mas funciona
+
+	const apiUrl = 'https://script.google.com/macros/s/AKfycbym0GgNgHq5HvQCoZJMY5jgS-AWs14tJj2VAnvDegK3EHTekPhqPU9cnLsRz4W9zMnn/exec';
+
+	const payload = {
+		action: 'error',
+		password: password,
+	};
+
+	try {
+		const response = await fetch(apiUrl, {
+			method: 'POST',
+			body: JSON.stringify(payload)
+		});
+
+		const resultText = await response.json();
+		const responseError = resultText.detalhe;
+
+		if(responseError == "Ação inválida."){
+			return true;
+		} else {
+			return false
+		}
+
+	} catch (error) {
+		console.error("Falha na requisição:", error);
+	}
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
-	const senhaText = document.getElementById('senhaSalvaText');
-
-	if(getCookie('password') === null){
-		senhaText.textContent = "Senha salva:";
-	}else{
-		senhaText.textContent = `Senha salva:${getCookie('password')}`;
+	const password = getCookie('password');
+	if(password != null){
+		if(verifyPassword(password)){
+			window.location.href = "index.html";
+		}
 	}
 });
-document.getElementById('loginForm').addEventListener('submit', function(event) {
-    event.preventDefault();
 
-    const password = document.getElementById('password').value;
+document.getElementById('loginForm').addEventListener('submit', async function(event) {
+	event.preventDefault();
 
-    if (password) {
-        document.cookie = `password=${encodeURIComponent(password)}; path=/; max-age=86400`;
+	const form = event.target;
+	const password = document.getElementById('password').value;
 
-        alert('Senha salva no cookie!');
-        console.log('Cookie de senha criado. Verifique nas ferramentas de desenvolvedor do seu navegador.');
-	console.log(getCookie('password'));
-    } else {
-        alert('Por favor, preencha a senha.');
-    }
-	window.location.reload();
+	if (password) {
+		const passwordIsCorrect = await verifyPassword(password);
+		if(passwordIsCorrect){
+			document.cookie = `password=${encodeURIComponent(password)}; path=/; max-age=86400`;
+			window.location.href = "index.html";
+		}else{
+			console.log("Senha incorreta.");
+		}
+
+	} else {
+		alert('Por favor, preencha a senha.');
+	}
 });

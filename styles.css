@@ -1,0 +1,26 @@
+.password-body{
+	background-color: red;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 100vh;
+	margin: 0;
+}
+
+.password-form{
+	background-color: white;
+	height: 23%;
+	width: 20%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border-radius: 5px;
+}
+
+.password-form label{
+	margin-top: 3%;
+}
+
+.password-form input{
+	width: 80%;
+}

@@ -5,9 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module" src="script.js"></script>
 	<script src="https://unpkg.com/imask"></script>
+	<script src="./loadHeader.js"></script>
+	<script type="module" src="./loadLoginPage.js"></script>
     <title>Formulário de Pedido</title>
 </head>
 <body>
+
+	<div data-include="header"></div>
 
     <div class="container">
         <h1>Formulário de Pedido</h1>
@@ -37,17 +41,12 @@
                 <label for="retirada">Data de Retirada:</label>
                 <input type="date" id="retirada" name="retirada" required>
             </div>
+			<div class="form-group">
+				<label for="pago">Pago:</label>
+					<input type="checkbox" id="pago" name="pago"> 
+			</div>
             <button type="submit" id="submit-button">Enviar Pedido</button>
         </form>
         <p id="status-message"></p>
-
-	<a href="./pedidos.html">
-		<button type="">Pedidos</button>
-	</a>
-	<a href="./codigo.html">
-		<button type="">Codigo</button>
-	</a>
-    </div>
-
 </body>
 </html>

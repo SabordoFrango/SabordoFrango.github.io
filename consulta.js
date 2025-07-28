@@ -33,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const result = await response.json();
 
             if (result.status === "sucesso") {
+				console.log(result);
                 tableBody.innerHTML = ''; 
                 result.dados.forEach(pedido => {
                     const tr = document.createElement('tr');
@@ -43,11 +44,13 @@ document.addEventListener('DOMContentLoaded', () => {
 					const produto = pedido.produto;
 					const produtoList = produto.split(';');
 					const produtoFormatado = `Frango:${produtoList[0]} | Maionese:${produtoList[1]} | Sobrecoxa:${produtoList[2]}`
+					const pago = pedido.pago ? "Sim" : "Não";
 
                     tr.innerHTML = `
                         <td>${pedido.nome}</td>
                         <td>${produtoFormatado}</td>
                         <td>${pedido.telefone}</td>
+						<td>${pago}</td>
                         <td>${dataRetiradaFormatada}</td>
                         <td>
                             <button class="edit-btn" data-id="${pedido.id}">Alterar</button>
@@ -91,6 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			document.getElementById('edit-sobrecoxa').value = sobrecoxa;
             document.getElementById('edit-telefone').value = pedido.telefone;
             document.getElementById('edit-retirada').value = formatarData(pedido.retirada, 1);
+			document.getElementById('edit-pago').checked = pedido.pago;
             modal.style.display = 'flex';
         }
     });
@@ -117,6 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
             produto: produtosEditado,
             telefone: document.getElementById('edit-telefone').value,
             retirada: document.getElementById('edit-retirada').value,
+			pago: document.getElementById('edit-pago').checked ? "1" : "0",
         };
         enviarAcaoParaAPI({ action: 'update', id: id, data: dadosDoFormulario, password: getCookie('password')});
         modal.style.display = 'none';

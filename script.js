@@ -2,6 +2,7 @@ import { getCookie } from "./getCookie.js";
 
 document.addEventListener('DOMContentLoaded', () => {
 
+	const pago = document.getElementById('pago');
 	const dataHoje = document.getElementById('retirada').valueAsDate = new Date();
 
 	const inputTelefone = document.getElementById('telefone');
@@ -37,6 +38,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const dataObject = Object.fromEntries(formData.entries());
         dataObject.produto = produtoFinal;
+		if(pago.checked){
+			dataObject.pago = "1";
+		}else{
+			dataObject.pago = "0";
+		}
+
+		console.log(dataObject);
 
         const payload = {
             action: 'create',

@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module" src="consulta.js"></script>
 	<script src="https://unpkg.com/imask"></script>
+	<script src="./loadHeader.js"></script>
+	<script type="module" src="./loadLoginPage.js"></script>
     <title>Consultar Pedidos</title>
 </head>
 <body>
+	<div data-include="header"></div>
     <h1>Lista de Pedidos</h1>
     <table>
         <thead>
@@ -15,6 +18,7 @@
                 <th>Nome</th>
                 <th>Produtos</th>
                 <th>Telefone</th>
+				<th>Pago</th>
                 <th>Retirada</th>
                 <th>Ações</th>
             </tr>
@@ -56,11 +60,13 @@
                     <label for="edit-retirada">Data de Retirada:</label>
                     <input type="date" id="edit-retirada" name="retirada" required>
                 </div>
+                <div class="form-group">
+                    <label for="edit-pago">Data de Retirada:</label>
+                    <input type="checkbox" id="edit-pago" name="pago">
+                </div>
                 <button type="submit">Salvar Alterações</button>
             </form>
         </div>
     </div>
-	<a href="./index.html"><button type="">Novo Pedido</button></a>
-
 </body>
 </html>

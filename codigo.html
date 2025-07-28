@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="module" src="setCookie.js"></script>
-    <title>Exemplo de Login</title>
+	<link rel="stylesheet" type="text/css" href="styles.css">
+    <title>Login</title>
 </head>
-<body>
-    <p>Este exemplo salva a senha em cookies.
-    <form id="loginForm">
+<body class="password-body">
+    <form id="loginForm" class="password-form">
         <label for="password">Senha:</label><br>
         <input type="password" id="password" name="password"><br><br>
 
-        <input type="submit" value="Salvar Senha no Cookie">
+        <input type="submit" value="Fazer Login">
     </form>
-	<p id="senhaSalvaText">Senha salva: </p>
 </body>
 </html>
