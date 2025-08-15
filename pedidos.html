@@ -1,72 +1,100 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script type="module" src="consulta.js"></script>
-	<script src="https://unpkg.com/imask"></script>
-	<script src="./loadHeader.js"></script>
-	<script type="module" src="./loadLoginPage.js"></script>
-    <title>Consultar Pedidos</title>
-</head>
-<body>
-	<div data-include="header"></div>
-    <h1>Lista de Pedidos</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>Nome</th>
-                <th>Produtos</th>
-                <th>Telefone</th>
-				<th>Pago</th>
-                <th>Retirada</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody id="pedidos-table-body">
-            <tr>
-                <td colspan="7" style="text-align:center;">Carregando pedidos...</td>
-            </tr>
-        </tbody>
-    </table>
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <div id="edit-modal" class="modal">
-        <div class="modal-content">
-            <span class="close-btn">&times;</span>
-            <h2>Editar Pedido</h2>
-            <form id="edit-form">
-                <input type="hidden" id="edit-pedido-id">
-                <div class="form-group">
-                    <label for="edit-nome">Nome:</label>
-                    <input type="text" id="edit-nome" name="nome" required>
-                </div>
-				<div class="form-group">
-					<label for="edit-frango">Frango: </label>
-					<input type="number" id="edit-frango" name="frango" required, min="0">
-				</div>
-				<div class="form-group">
-					<label for="edit-maionese">Maionese: </label>
-					<input type="number" id="edit-maionese" name="maionese" required, min="0">
-				</div>
-				<div class="form-group">
-					<label for="edit-sobrecoxa">Sobrecoxa: </label>
-					<input type="number" id="edit-sobrecoxa" name="sobrecoxa" required, min="0">
-				</div>
-                <div class="form-group">
-                    <label for="edit-telefone">Telefone:</label>
-                    <input type="tel" id="edit-telefone" name="telefone" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-retirada">Data de Retirada:</label>
-                    <input type="date" id="edit-retirada" name="retirada" required>
-                </div>
-                <div class="form-group">
-                    <label for="edit-pago">Pago:</label>
-                    <input type="checkbox" id="edit-pago" name="pago">
-                </div>
-                <button type="submit">Salvar Alterações</button>
-            </form>
-        </div>
-    </div>
-</body>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+		<link rel="stylesheet" href="https://cdn.datatables.net/2.0.8/css/dataTables.dataTables.css" />
+		<link rel="stylesheet" href="./styles.css">
+
+		<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+		<script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
+		<script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.js"></script>
+		<script src="https://cdn.datatables.net/plug-ins/2.0.8/filtering/type-based/accent-neutralise.js"></script>
+
+		<script src="https://unpkg.com/imask"></script>
+		<script type="module" src="./loadHeader.js"></script>
+		<script type="module" src="./loadLoginPage.js"></script>
+		<script type="module" src="consulta.js"></script>
+
+		<title>Consultar Pedidos</title>
+	</head>
+	<body>
+		<div data-include="header"></div>
+		<h1>Lista de Pedidos</h1>
+		<table id="TabelaPedidos" class="table table-striped table-bordered">
+			<thead>
+				<tr>
+					<th>Nome</th>
+					<th>Produtos</th>
+					<th>Telefone</th>
+					<th>Pago</th>
+					<th>Retirada</th>
+					<th>Ações</th>
+				</tr>
+			</thead>
+			<tbody id="pedidos-table-body">
+			</tbody>
+		</table>
+
+		<div id="edit-modal" class="modal">
+			<div class="modal-content">
+				<span class="close-btn">&times;</span>
+				<h2>Editar Pedido</h2>
+				<form id="edit-form">
+					<input type="hidden" id="edit-pedido-id">
+					<div class="form-group">
+						<label for="edit-nome">Nome:</label>
+						<input type="text" id="edit-nome" name="nome" required>
+					</div>
+					<div class="form-group">
+						<label for="edit-frango">Frango: </label>
+						<input type="number" id="edit-frango" name="frango" required, min="0">
+					</div>
+					<div class="form-group">
+						<label for="edit-maionese">Maionese: </label>
+						<input type="number" id="edit-maionese" name="maionese" required, min="0">
+					</div>
+					<div class="form-group">
+						<label for="edit-sobrecoxa">Sobrecoxa: </label>
+						<input type="number" id="edit-sobrecoxa" name="sobrecoxa" required, min="0">
+					</div>
+					<div class="form-group">
+						<label for="edit-telefone">Telefone:</label>
+						<input type="tel" id="edit-telefone" name="telefone" required>
+					</div>
+					<div class="form-group">
+						<label for="edit-retirada">Data de Retirada:</label>
+						<input type="date" id="edit-retirada" name="retirada" required>
+					</div>
+					<div class="form-group">
+						<label for="edit-pago">Pago:</label>
+						<input type="checkbox" id="edit-pago" name="pago">
+					</div>
+					<button type="submit">Salvar Alterações</button>
+				</form>
+			</div>
+		</div>
+	</body>
 </html>
+<script>
+$(document).ready(function() {
+    $('#TabelaPedidos').DataTable();
+});
+
+// Para ABRIR o modal
+const editModal = document.getElementById('edit-modal');
+editModal.style.display = 'flex'; // Primeiro, torna o container visível
+setTimeout(() => {
+    editModal.classList.add('visible'); // Depois, ativa a animação
+}, 10);
+
+
+// Para FECHAR o modal (pelo botão 'X' ou após salvar)
+editModal.classList.remove('visible');
+setTimeout(() => {
+    editModal.style.display = 'none'; // Esconde o container após a animação de saída
+}, 300); // O tempo deve ser o mesmo da transição do CSS
+</script>
