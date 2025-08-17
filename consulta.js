@@ -35,7 +35,8 @@ async function carregarPedidos() {
 				$('#TabelaPedidos').DataTable().destroy();
 			}
 			tableBody.innerHTML = '';
-
+			
+			console.log(result.dados);
 			$('#TabelaPedidos').DataTable({
 				destroy: true,
 				data: result.dados,
@@ -65,11 +66,16 @@ async function carregarPedidos() {
 					},
 					{
 						targets: 5, 
+						render: (data) => data ? "Sim" : "Não"
+					},
+					{
+						targets: 6, 
 						orderable: false,
 						searchable: false,
 						render: (data, type, row) => `
 							<button class="btn btn-secondary edit-btn" data-id="${row.id}">Alterar</button>
 							<button class="btn btn-danger delete-btn" data-id="${row.id}">Deletar</button>
+							<button class="btn btn-success success-btn" data-id="${row.id}">Retirou</button>
 						`
 					}
 				],
@@ -79,7 +85,8 @@ async function carregarPedidos() {
 					{ data: 'telefone' },
 					{ data: 'pago' },
 					{ data: 'retirada' },
-					{ data: null } 
+					{ data: 'retirou'},
+					{ data: null }, 
 				],
 				language: {
 					url: 'https://cdn.datatables.net/plug-ins/2.0.8/i18n/pt-BR.json',
@@ -155,6 +162,11 @@ document.addEventListener('DOMContentLoaded', () => {
 				document.getElementById('edit-pago').checked = pedidoData.pago;
 				modal.style.display = 'flex';
 			}
+		}
+
+		if (target.classList.contains('success-btn')) {
+			const pedidoId = target.dataset.id;
+			enviarAcaoParaAPI({action: 'retirou', id: pedidoId, password:getCookie('password')});
 		}
 	});
 
